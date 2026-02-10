@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:student_directory_app/service.dart';
@@ -13,6 +14,88 @@ class _StudentEntryState extends State<StudentEntry> {
   TextEditingController namecontroller = TextEditingController();
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController coursecontroller = TextEditingController();
+  void editbox(DocumentSnapshot doc) {
+    namecontroller.text = doc["NAME"];
+    namecontroller.text = doc["EMAIL"];
+    namecontroller.text = doc["COURSE"];
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.only(left: 30,right: 30),
+        child: Column(
+          children: [
+            Text("edit student"),
+             SizedBox(height: 20,),
+            TextField(
+              controller: namecontroller,
+              decoration: InputDecoration(
+                hintText: "Name",
+                fillColor: Colors.grey,
+                filled: true,
+                labelStyle: TextStyle(color: Colors.black),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(9),
+                ),
+              ),
+            ),
+            SizedBox(height: 20,),
+            TextField(
+              controller: emailcontroller,
+              decoration: InputDecoration(
+                fillColor: Colors.grey,
+                filled: true,
+                labelStyle: TextStyle(color: Colors.black),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(9),
+                ),
+                hintText: "Email",
+              ),
+            ),
+         SizedBox(height: 20,),
+            TextField(
+              controller: coursecontroller,
+              decoration: InputDecoration(
+                fillColor: Colors.grey,
+                filled: true,
+                hintText: "Course",
+                labelStyle: TextStyle(color: Colors.black),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(9),
+              ),
+            ),),
+            SizedBox(height: 20),
+            SizedBox(
+              height: 40,
+              width: 300,
+              child: ElevatedButton(
+                onPressed: () {
+                  updatestudent(
+                    doc.id,
+                    namecontroller.text,
+                    emailcontroller.text,
+                    coursecontroller.text,
+                    context,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text("edit"),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +123,7 @@ class _StudentEntryState extends State<StudentEntry> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {editbox(studentdata[index]);},
                       icon: Icon(Icons.edit, color: Colors.blue),
                     ),
                     IconButton(
